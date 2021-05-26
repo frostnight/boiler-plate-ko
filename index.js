@@ -36,6 +36,38 @@ app.post('/register', (req, res) => {
   })
 })
 
+app.post('/login', (req, res) => {
+  
+  // 요청된 이메일을 데이터베이스에서 있는지 찾는다.
+  // frostnight의견 : 이렇게 하면 아이디가 있는지 없는지에 대한 힌트를 주는 것이므로
+  // 보안상 좋지가 않다. 아이디, 비밀번호 한번에 응답메시지를 줘야한다 권고사항!
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if(!user) {
+      return res.json({
+        loginSuccess: false,
+        message: "제공된 이메일에 해당하는 유저가 없습니다."
+      })
+    }
+
+    // 요청된 이메일이 데이터 베이스에 있다면 비밀번호가 맞는 비밀번호 인지 확인.
+    user.comparePassword(req.body.password, (err, isMatch ) => {
+      if(isMatch)
+        return res.json( {loginSuccess: false, message: "비밀번호가 틀렸습니다."})
+      
+      //비밀번호까지 맞다면 토큰을 생성하기
+      user.generateToken((err, user) => {
+        
+      } )
+
+    })
+
+  })
+
+  
+  
+  // 비밀번호 까지 맞다면 토큰을 생성하기.
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
