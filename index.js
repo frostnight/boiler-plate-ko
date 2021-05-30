@@ -37,7 +37,7 @@ app.post('/api/users/register', (req, res) => {
   })
 })
 
-app.post('/login', (req, res) => {
+app.post('/api/users/login', (req, res) => {
   
   // 요청된 이메일을 데이터베이스에서 있는지 찾는다.
   // frostnight의견 : 이렇게 하면 아이디가 있는지 없는지에 대한 힌트를 주는 것이므로
@@ -79,6 +79,17 @@ app.get('/api/users/auth', auth, (req, res) => {
     role: req.user.role,
     image: req.user.image
   })
+})
+
+app.get('/api/users/logout', auth, (req, res) => {
+  User.findOneAndUpdate({_id: req.user._id},
+    {token: ""}
+    ,(err, user) => {
+      if(err) return res.json({success: false, err});
+      return res.status(200).send({
+        success: true
+      })
+    })
 })
 
 app.listen(port, () => {
