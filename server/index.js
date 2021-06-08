@@ -70,6 +70,8 @@ app.post('/api/users/login', (req, res) => {
   })
 })
 
+// role 1 어드민 role2 특정 부서 어드민
+// role 0 -> 일반 유저 role 0이 아니면 관리자
 app.get('/api/users/auth', auth, (req, res) => {
   // 미들웨어를 통과해서 Authentication이 True
   res.status(200).json({
